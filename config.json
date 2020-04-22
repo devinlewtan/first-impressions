@@ -1,1 +1,1 @@
-{"dbconf":"mongodb://devin:lewtan@localhost/impressions"}
+{ "dbconf": "mongodb://devin:lewtan@localhost/impressions" }
