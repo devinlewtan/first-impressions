@@ -6,6 +6,8 @@ const fs = require("fs");
 const db = require("./db.js");
 const bodyParser = require("body-parser");
 
+require("dotenv").config();
+
 const app = express();
 app.set("view engine", "hbs");
 
