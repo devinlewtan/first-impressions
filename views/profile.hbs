@@ -1,74 +1,79 @@
 {{error}}
 {{success}}
+
 <head>
   <link rel="stylesheet" href="/css/questions.css">
 </head>
-<br/>
+<br />
 <div class="singleQuestion container">
-<h2>Welcome, stranger!</h2>
+  <h2>Welcome, stranger!</h2>
 
-<p>To get started, upload an image of yourself. The less context, the better.</p>
+  <p>To get started, upload an image of yourself. The less context, the better.</p>
 
-<form action="/uploadpicture" method="POST" enctype="multipart/form-data">
-<input type="file" name="picture" accept="application/x-zip-compressed,image/*" onchange="loadFile(event)">
-<br>
-<p><img id="output" width="200"/></p>
-<!-- here! -->
-<input class="button" type="submit" value="Save image" onchange="loadFile({{image}})">
-</form>
+  <form action="/uploadpicture" method="POST" enctype="multipart/form-data">
+    <input type="file" name="picture" accept="application/x-zip-compressed,image/*" onchange="loadFile(event)">
+    <br>
+    <p><img id="output" width="200" /></p>
+    <!-- here! -->
+    <input class="button" type="submit" value="Save image">
+  </form>
 
-<p> Next, add up to 10 questions about yourself! Get creative with your answers.</p>
+  <p> Next, add up to 10 questions about yourself! Get creative with your answers.</p>
 
-<button class="button" type="button" onclick="showHide()">Add question +</button>
-</br></br>
-<div id="myDIV" style="display: none">
-<form method="post" action="/profile">
-  question: <input type="text" name="question"></br>
-  </br>
-  a) <input type="text" name="a"></br>
-  b) <input type="text" name="b"></br>
-  c) <input type="text" name="c"></br>
-  d) <input type="text" name="d"></br>
-  </br>
-  correct answer (just the letter!): <input type="text" size="2" name="correctAnswer"></br>
-  </br>
-	<input class="button" type="submit" value="Save">
-</form>
-</div>
-<br>
+  <button class="button" type="button" onclick="showHide()">Add question +</button>
+  </br></br>
+  <div id="myDIV" style="display: none">
+    <form method="post" action="/profile">
+      question: <input type="text" name="question" required></br>
+      </br>
+      a) <input type="text" name="a" required></br>
+      b) <input type="text" name="b" required></br>
+      c) <input type="text" name="c" required></br>
+      d) <input type="text" name="d" required></br>
+      </br>
+      correct answer (just the letter!): <input type="text" size="2" name="correctAnswer" required></br>
+      </br>
+      <input class="button" type="submit" value="Save">
+    </form>
+  </div>
+  <br>
 
 
-<h1> my questions </h1>
-<a href="profile/results">Show me what people are guessing about me</a><br>
+  <h1> my questions </h1>
+  <a> Let's see what people think you are like... are you nervous?</a>
+  <div class="manyQuestions">
+    {{#each questions}}
+    <div class="singleQuestion">
+      <h2>{{this.question}}</h2>
+      {{#each this.answers}}
+      <h3><strong>{{this.value}}</strong> - guessed {{this.timesVoted}} times </h3>
+      {{/each}}
+      <div class="editDelete">
+        <br>
+        <form method="post" action="/profile/questions/delete">
+          <button class="button" type="submit" id={{this.value}} onclick="reveal" name="questionId"
+            value="{{this._id}}">delete</button><br>
+        </form>
+      </div>
+    </div>
 
-<div class="manyQuestions">
-{{#each questions}}
-<div class="singleQuestion">
-    <h2>{{this.question}}</h2>
-          <div class="manyAnswers">
-          {{#each this.answers}}
-            <div class="singleAnswer">
-            <label>{{this.value}}</label><br>
-          </div>
-          {{/each}}
-        </div>
-</div>
-{{/each}}
-</div>
+    {{/each}}
+  </div>
 </div>
 </div>
 
 <script>
-const loadFile = function(event) {
-	const image = document.getElementById('output');
-	image.src = URL.createObjectURL(event.target.files[0]);
-};
-const showHide = function() {
-  var x = document.getElementById("myDIV");
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
+  const loadFile = function (event) {
+    const image = document.getElementById('output');
+    image.src = URL.createObjectURL(event.target.files[0]);
+  };
+  const showHide = function () {
+    var x = document.getElementById("myDIV");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
   }
-}
+
 </script>

@@ -10,7 +10,6 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-
 .manyQuestions {
   grid-template-columns: repeat(2, 1fr);
   margin: 15px;
@@ -19,12 +18,14 @@
 }
 
 .singleAnswer {
-  background-color: #E9ECA3;
+  background-color: #e9eca3;
   border-radius: 20px;
   padding: 15px;
   margin: 10px;
   white-space: nowrap;
-  width: 150px;
+  width: 100%;
+  max-inline-size: -webkit-fill-available;
+  font-size: x-large;
 }
 
 .manyAnswers {
@@ -37,4 +38,8 @@
 
 label {
   font-size: 15px;
+}
+
+.game {
+  text-align: -webkit-center;
 }

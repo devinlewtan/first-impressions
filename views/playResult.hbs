@@ -1,0 +1,17 @@
+<head>
+    <link rel="stylesheet" href="/css/questions.css">
+</head>
+<br>
+{{#each question}}
+<div class="singleQuestion">
+    <img src='{{image.data}}' height="180" width="250"><br>
+    <h2>{{this.question}}</h2>
+    {{this.correctAnswer}}
+    {{#each this.answers}}
+    <h3><strong style="color: {{{style}}}">{{this.value}}</strong> - guessed {{this.timesVoted}} times </h3>
+    {{/each}}
+    <a class="button" href="/">next question</a>
+
+</div>
+{{/each}}
+</div>

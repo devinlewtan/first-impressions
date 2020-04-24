@@ -1,56 +1,57 @@
-
 <!-- Quiz Container -->
+
 <head>
-  <link rel="stylesheet" href="/css/questions.css">
+    <link rel="stylesheet" href="/css/questions.css">
 </head>
+
 <body>
-{{error}}
-{{image.data}}
-<br>
-{{#each question}}
-  <div class="singleQuestion center">
-    <img src='{{image.data}}' height="180" width="250"><br>
-    <h2>{{this.question}}</h2>
-    <form method="post" action="/">
-        <input type="hidden" name="question_id" id={{this._id}} value="{{this._id}}">
-        <div class="manyAnswers">
-          {{#each this.answers}}
-            <div class="singleAnswer">
-            <input class="button" type="radio" id={{this.value}} name="userGuess" value="{{this.letter}}">{{this.value}}</input><br>
-          </div>
-          {{/each}}
-        </div>
-        <input class="button" type="submit" onclick="display">
-    </form>
+    {{error}}
+
     <br>
-    <div id="disp" style=
-        "color:green; font-size:18px; font-weight:bold;">
+    {{#each question}}
+    <div class="singleQuestion center">
+        <img src='{{image.data}}' height="180" width="250"><br>
+        <h2>{{this.question}}</h2>
+        <form method="post" class="game" action="/">
+            <input type="hidden" name="question_id" id={{this._id}} value="{{this._id}}">
+            <div class="manyAnswers center">
+                {{#each this.answers}}
+                <div>
+                    <button class="singleAnswer" type="submit" id={{this.value}} onclick="reveal" name="userGuess"
+                        value="{{this.letter}}">{{this.value}}</button><br>
+                    {{userGuess}}
+                </div>
+                {{/each}}
+            </div>
+        </form>
+        <br>
+        <div id="disp" style="color:green; font-size:18px; font-weight:bold;">
+        </div>
     </div>
-</div>
-{{/each}}
+    {{/each}}
 
 </body>
 
-    <script>
-        function display() {
-            if(document.getElementById('GFG').checked) {
-                document.getElementById("disp").innerHTML
-                    = document.getElementById("GFG").value
-                    + " radio button checked";
-            }
-            else if(document.getElementById('HTML').checked) {
-                document.getElementById("disp").innerHTML
-                    = document.getElementById("HTML").value
-                    + " radio button checked";
-            }
-            else if(document.getElementById('JS').checked) {
-                document.getElementById("disp").innerHTML
-                    = document.getElementById("JS").value
-                    + " radio button checked";
-            }
-            else {
-                document.getElementById("disp").innerHTML
-                    = "No one selected";
-            }
+<script>
+    function reveal() {
+        if (document.getElementById('GFG').checked) {
+            document.getElementById("disp").innerHTML
+                = document.getElementById("GFG").value
+                + " radio button checked";
         }
-    </script>
+        else if (document.getElementById('HTML').checked) {
+            document.getElementById("disp").innerHTML
+                = document.getElementById("HTML").value
+                + " radio button checked";
+        }
+        else if (document.getElementById('JS').checked) {
+            document.getElementById("disp").innerHTML
+                = document.getElementById("JS").value
+                + " radio button checked";
+        }
+        else {
+            document.getElementById("disp").innerHTML
+                = "No one selected";
+        }
+    }
+</script>

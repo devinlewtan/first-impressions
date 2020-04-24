@@ -41,10 +41,42 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+// (auth = require("./auth")),
+//   (cookieParser = require("cookie-parser")),
+//   (cookieSession = require("cookie-session"));
+
+// app.use(
+//   cookieSession({
+//     name: "session",
+//     keys: ["123"],
+//   })
+// );
+// app.use(cookieParser());
+
+// passport.use(new GoogleStrategy({
+//   clientID: %your_client_ID%,
+//   clientSecret: %your_client_secret%,
+//   callbackURL: %your_callback_url%
+// },
+// (token, refreshToken, profile, done) => {
+//   return done(null, {
+//       profile: profile,
+//       token: token
+//   });
+// }));
+
 //CUSTOM MIDDLEWARE
 app.use(function (req, res, next) {
   if (req.user) {
     res.locals.currentUser = req.user;
+  }
+  next();
+});
+
+app.use(function (req, res, next) {
+  if (req.body.userGuess) {
+    res.locals.userGuess = req.body.userGuess;
   }
   next();
 });
@@ -74,6 +106,7 @@ app.get("/", (req, res) => {
             res.render("play", { error: err.errmsg });
           } else {
             //render profile picture and random question
+            console.log(prof.image);
             res.render("play", { question: q, image: prof.image });
           }
         });
@@ -84,36 +117,34 @@ app.get("/", (req, res) => {
 
 app.post("/", (req, res) => {
   const { question_id, userGuess } = req.body;
-  console.log(req.body);
-  Question.find({ _id: question_id }, function (err, q) {
-    if (err) {
-      console.log(err);
-      res.render("play", { error: err.errmsg });
-    } else {
-      let style = "";
-      if (userGuess === q.correctAnswer) {
-        style = "color:green; font-weight:bold;";
-      } else {
-        style = "color:red; font-weight:bold;";
-      }
-      res.render("play", { question: q });
-    }
-  });
   Question.updateOne(
     { _id: question_id, "answers.letter": userGuess },
     { $inc: { "answers.$.timesVoted": 1 } },
     (err, res) => {
       if (err) throw err;
-      console.log(res, " document(s) updated");
+      console.log(res.nModified, " document(s) updated");
     }
   );
+  Question.find({ _id: question_id }, function (err, q) {
+    if (err) {
+      console.log(err);
+      res.render("play", { error: err.errmsg });
+    } else {
+      let correct = userGuess == "a";
+      let style = correct ? "color: green" : "color: red";
+      res.render("playResult", {
+        question: q,
+        style: "green",
+      });
+    }
+  });
 });
 
 app.get("/register", (req, res) => {
   res.render("register");
 });
 
-app.post("/register", (req, res) => {
+app.post("/register", (req, res, next) => {
   User.register(
     new User({
       username: req.body.username,
@@ -122,10 +153,10 @@ app.post("/register", (req, res) => {
     function (err, user) {
       if (err) {
         console.log(err);
-        res.render("register");
+        //res.render("register");
+        return res.redirect("/register");
       } else {
         passport.authenticate("local")(req, res, function () {
-          //res.redirect("/profile");
           console.log("success");
           return res.redirect("/profile");
         });
@@ -133,6 +164,22 @@ app.post("/register", (req, res) => {
     }
   );
 });
+
+app.get(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: ["https://www.googleapis.com/auth/userinfo.profile"],
+  })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/" }),
+  (req, res) => {
+    req.session.token = req.user.token;
+    res.redirect("/");
+  }
+);
 
 app.get("/login", (req, res) => {
   res.render("login");
@@ -159,6 +206,7 @@ app.post("/login", (req, res, next) => {
 
 app.get("/logout", (req, res) => {
   req.logout();
+  req.session = null;
   res.redirect("/");
 });
 
@@ -173,7 +221,10 @@ app.get("/profile", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
       if (profile.length === 0) {
         const defaultProf = new Profile({
           user_id: req.user.username,
-          image: { data: "", contentType: "" },
+          image: {
+            data: "devinlewtan-final-project/public/images/icon.png",
+            contentType: "image/png",
+          },
           question_ids: [],
         });
         defaultProf.save((err, savedProf) => {
@@ -199,7 +250,7 @@ app.get("/profile", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
               function (err, updatedProf) {
                 if (err) {
                   console.log(err);
-                  res.render(profile, { err: err.errmsg });
+                  res.render("profile", { err: err.errmsg });
                 }
               }
             );
@@ -251,17 +302,25 @@ app.post("/profile", (req, res) => {
   );
 });
 
-app.get("/profile/results", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
-  //find questions by their ids
-  Question.find({ profile_id: req.user.username }, function (err, questions) {
-    if (err) {
-      console.log(err);
-      res.render("profile", { error: err.errmsg });
-    } else {
-      res.render("results", { questions: questions });
-    }
-  });
-});
+app.post(
+  "/profile/questions/delete",
+  connectEnsureLogin.ensureLoggedIn(),
+  (req, res) => {
+    const question_id = req.body.questionId;
+    Question.deleteOne({ _id: question_id }, function (err, success) {
+      if (err) console.log(err);
+      console.log(success, "Successful deletion");
+    });
+    Profile.updateOne(
+      { question_ids: { $elemMatch: { question_id } } },
+      (err, prof) => {
+        if (err) console.log(err.errmsg);
+        console.log(prof, "updated");
+        res.redirect("/profile");
+      }
+    );
+  }
+);
 
 //storing images in db
 const multer = require("multer");
@@ -277,7 +336,6 @@ app.post("/uploadpicture", upload.single("picture"), (req, res) => {
   } else {
     const newImg = fs.readFileSync(req.file.path);
     const encImg = newImg.toString("base64");
-
     const newItem = {
       contentType: req.file.mimetype,
       data: Buffer.from(encImg, "base64"),
