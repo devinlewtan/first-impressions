@@ -107,7 +107,10 @@ app.get("/", (req, res) => {
           } else {
             //render profile picture and random question
             console.log(prof.image);
-            res.render("play", { question: q, image: prof.image });
+            res.render("play", {
+              question: q,
+              image: JSON.stringify(prof.image.data),
+            });
           }
         });
       }
@@ -130,11 +133,17 @@ app.post("/", (req, res) => {
       console.log(err);
       res.render("play", { error: err.errmsg });
     } else {
-      let correct = userGuess == "a";
-      let style = correct ? "color: green" : "color: red";
+      //TODO
+      let correct = userGuess == JSON.parse(JSON.stringify(q))[0].correctAnswer;
+      console.log(JSON.parse(JSON.stringify(q))[0].correctAnswer);
+      let totalVotes = 0;
+      //pass in total votes for question by accumulating guesses
+      q = JSON.parse(JSON.stringify(q));
+      q[0].answers.map((a) => (totalVotes += a.timesVoted));
       res.render("playResult", {
         question: q,
-        style: "green",
+        correct: correct,
+        totalVotes: totalVotes,
       });
     }
   });
