@@ -10,7 +10,7 @@ const app = express();
 app.set("view engine", "hbs");
 
 //SETTINGS
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
@@ -81,6 +81,15 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 //ROUTES
 //should render random question from database (and the image of the associated user profile)
 app.get("/", (req, res) => {
@@ -94,7 +103,7 @@ app.get("/", (req, res) => {
     function (err, profiles) {
       if (err) {
         console.log(err);
-        res.send(err.errmsg);
+        res.send(err.message);
       } else {
         let prof = profiles[random(profiles.length)];
         let ques = Array.from(prof.question_ids)[
@@ -103,13 +112,13 @@ app.get("/", (req, res) => {
         Question.find({ _id: ques }, function (err, q) {
           if (err) {
             console.log(err);
-            res.render("play", { error: err.errmsg });
+            res.render("play", { error: err.message });
           } else {
             //render profile picture and random question
             console.log(prof.image);
             res.render("play", {
               question: q,
-              image: JSON.stringify(prof.image.data),
+              image: prof.image.data,
             });
           }
         });
@@ -131,7 +140,7 @@ app.post("/", (req, res) => {
   Question.find({ _id: question_id }, function (err, q) {
     if (err) {
       console.log(err);
-      res.render("play", { error: err.errmsg });
+      res.render("play", { error: err.message });
     } else {
       //TODO
       let correct = userGuess == JSON.parse(JSON.stringify(q))[0].correctAnswer;
@@ -163,7 +172,7 @@ app.post("/register", (req, res, next) => {
       if (err) {
         console.log(err);
         //res.render("register");
-        return res.redirect("/register");
+        return res.render("register", { error: err.message });
       } else {
         passport.authenticate("local")(req, res, function () {
           console.log("success");
@@ -215,7 +224,6 @@ app.post("/login", (req, res, next) => {
 
 app.get("/logout", (req, res) => {
   req.logout();
-  req.session = null;
   res.redirect("/");
 });
 
@@ -224,14 +232,14 @@ app.get("/profile", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
   Profile.find({ user_id: req.user.username }, function (err, profile) {
     if (err) {
       console.log(err);
-      res.render("profile", { error: err.errmsg });
+      res.render("profile", { error: err.message });
     } else {
       //create default profile for new user
       if (profile.length === 0) {
         const defaultProf = new Profile({
           user_id: req.user.username,
           image: {
-            data: "devinlewtan-final-project/public/images/icon.png",
+            data: "",
             contentType: "image/png",
           },
           question_ids: [],
@@ -239,7 +247,7 @@ app.get("/profile", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
         defaultProf.save((err, savedProf) => {
           if (err) {
             console.log(err);
-            res.render("profile", { error: err.errmsg });
+            res.render("profile", { error: err.message });
           }
         });
       } else {
@@ -250,7 +258,7 @@ app.get("/profile", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
         ) {
           if (err) {
             console.log(err);
-            res.render("profile", { error: err.errmsg });
+            res.render("profile", { error: err.message });
           } else {
             const question_ids = questions.map((q) => q._id);
             Profile.updateOne(
@@ -259,11 +267,11 @@ app.get("/profile", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
               function (err, updatedProf) {
                 if (err) {
                   console.log(err);
-                  res.render("profile", { err: err.errmsg });
+                  res.render("profile", { err: err.message });
                 }
               }
             );
-            const profileImage = profile.image;
+            const profileImage = profile[0].image.data;
             console.log(profileImage);
             res.render("profile", {
               image: profileImage,
@@ -295,7 +303,7 @@ app.post("/profile", (req, res) => {
         newQuestion.save((err, savedQues) => {
           if (err) {
             console.log(err);
-            res.render("profile", { error: err.errmsg });
+            res.render("profile", { error: err.message });
           } else {
             console.log(savedQues, "has been added to db!");
             res.redirect("/profile");
@@ -303,7 +311,7 @@ app.post("/profile", (req, res) => {
         });
       } else if (err) {
         console.log(err);
-        res.render("profile", { err: err.errmsg });
+        res.render("profile", { err: err.message });
       } else {
         res.redirect("/profile");
       }
@@ -323,13 +331,26 @@ app.post(
     Profile.updateOne(
       { question_ids: { $elemMatch: { question_id } } },
       (err, prof) => {
-        if (err) console.log(err.errmsg);
+        if (err) console.log(err.message);
         console.log(prof, "updated");
         res.redirect("/profile");
       }
     );
   }
 );
+
+app.post("/profile/delete", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
+  console.log(req.user.username);
+  User.deleteOne({ profileId: req.user.username }, (err, deletedUser) => {
+    if (err) {
+      return res.render("/profile", { error: err.message });
+    } else {
+      console.log(deletedUser.deletedCount, "accounts deleted");
+      req.logout();
+      return res.redirect("/");
+    }
+  });
+});
 
 //storing images in db
 const multer = require("multer");
@@ -347,17 +368,17 @@ app.post("/uploadpicture", upload.single("picture"), (req, res) => {
     const encImg = newImg.toString("base64");
     const newItem = {
       contentType: req.file.mimetype,
-      data: Buffer.from(encImg, "base64"),
+      data: encImg,
     };
     Profile.updateOne(
-      { user_id: res.locals.user },
+      { user_id: req.user.username },
       { image: newItem },
       (err, savedProf) => {
         if (err) {
           console.log(err);
           res.send(err);
         } else {
-          console.log("success", savedProf);
+          console.log(savedProf.nModified, "document(s) updated");
           res.redirect("/profile");
         }
       }

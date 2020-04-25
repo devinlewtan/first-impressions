@@ -2,15 +2,35 @@
 
 <head>
     <link rel="stylesheet" href="/css/questions.css">
+    <link rel="stylesheet" href="/css/modal.css">
 </head>
 
 <body>
     {{error}}
+    <!-- Trigger/Open The Modal -->
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h1>Welcome, stranger!</h1>
+            <br>
+            <h1 style="color: #4bc4a1">We all know the saying "don't judge a book by it's cover." First impressions are
+                typically wrong and
+                based on stereotypical profiling.</h1>
+
+            <br>
+            <h1>But what if... someone explicitly requested you to judge them by an image?</h1>
+        </div>
+
+    </div>
 
     <br>
     {{#each question}}
     <div class="singleQuestion center">
-        <img src='{{image.data}}' height="180" width="250"><br>
+        <img src="data:image/png;base64, {{../image}}" width="300" />
         <h2>{{this.question}}</h2>
         <form method="post" class="game" action="/">
             <input type="hidden" name="question_id" id={{this._id}} value="{{this._id}}">
@@ -33,25 +53,34 @@
 </body>
 
 <script>
-    function reveal() {
-        if (document.getElementById('GFG').checked) {
-            document.getElementById("disp").innerHTML
-                = document.getElementById("GFG").value
-                + " radio button checked";
-        }
-        else if (document.getElementById('HTML').checked) {
-            document.getElementById("disp").innerHTML
-                = document.getElementById("HTML").value
-                + " radio button checked";
-        }
-        else if (document.getElementById('JS').checked) {
-            document.getElementById("disp").innerHTML
-                = document.getElementById("JS").value
-                + " radio button checked";
-        }
-        else {
-            document.getElementById("disp").innerHTML
-                = "No one selected";
+
+
+
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    let modalShown = localStorage.getItem("modalShown")
+
+    if (!modalShown) {
+        modal.style.display = "block";
+        localStorage.setItem("modalShown", true)
+    }
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
         }
     }
+
+
 </script>

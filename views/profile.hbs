@@ -1,10 +1,9 @@
-{{error}}
-{{success}}
-
 <head>
   <link rel="stylesheet" href="/css/questions.css">
 </head>
 <br />
+{{error}}
+{{success}}
 <div class="singleQuestion container">
   <h2>Welcome, stranger!</h2>
 
@@ -18,51 +17,66 @@
     <input class="button" type="submit" value="Save image">
   </form>
 
-  <p> Next, add up to 10 questions about yourself! Get creative with your answers.</p>
+  <p><img src="../public/images/icon.png" id="save" width="200" /></p>
+  <img src="data:image/png;base64, {{image}}" width="200" id="propic" />
 
-  <button class="button" type="button" onclick="showHide()">Add question +</button>
-  </br></br>
-  <div id="myDIV" style="display: none">
-    <form method="post" action="/profile">
-      question: <input type="text" name="question" required></br>
-      </br>
-      a) <input type="text" name="a" required></br>
-      b) <input type="text" name="b" required></br>
-      c) <input type="text" name="c" required></br>
-      d) <input type="text" name="d" required></br>
-      </br>
-      correct answer (just the letter!): <input type="text" size="2" name="correctAnswer" required></br>
-      </br>
-      <input class="button" type="submit" value="Save">
-    </form>
-  </div>
-  <br>
+  <div id="questions" style="display: none">
 
+    <p> Next, add up to 10 questions about yourself! Get creative with your answers.</p>
 
-  <h1> my questions </h1>
-  <a> Let's see what people think you are like... are you nervous?</a>
-  <div class="manyQuestions">
-    {{#each questions}}
-    <div class="singleQuestion">
-      <h2>{{this.question}}</h2>
-      {{#each this.answers}}
-      <h3><strong>{{this.value}}</strong> - guessed {{this.timesVoted}} times </h3>
-      {{/each}}
-      <div class="editDelete">
-        <br>
-        <form method="post" action="/profile/questions/delete">
-          <button class="button" type="submit" id={{this.value}} onclick="reveal" name="questionId"
-            value="{{this._id}}">delete</button><br>
-        </form>
-      </div>
+    <button class="button" type="button" onclick="showHide()">Add question +</button>
+    </br></br>
+    <div id="myDIV" style="display: none">
+      <form method="post" action="/profile">
+        question: <input type="text" name="question" required></br>
+        </br>
+        a) <input type="text" name="a" required></br>
+        b) <input type="text" name="b" required></br>
+        c) <input type="text" name="c" required></br>
+        d) <input type="text" name="d" required></br>
+        </br>
+        correct answer (just the letter!): <input type="text" size="2" name="correctAnswer" required></br>
+        </br>
+        <input class="button" type="submit" value="Save">
+      </form>
     </div>
+    <br>
 
-    {{/each}}
+
+    <h1> my questions </h1>
+    <a> Let's see what people think you are like... are you nervous?</a>
+    <div class="manyQuestions">
+      {{#each questions}}
+      <div class="singleQuestion">
+        <h2>{{this.question}}</h2>
+        {{#each this.answers}}
+        <h3><strong>{{this.value}}</strong> - guessed {{this.timesVoted}} times </h3>
+        {{/each}}
+        <div class="editDelete">
+          <br>
+          <form method="post" action="/profile/questions/delete">
+            <button class="button" type="submit" id={{this.value}} onclick="reveal" name="questionId"
+              value="{{this._id}}">delete</button><br>
+          </form>
+        </div>
+      </div>
+
+      {{/each}}
+    </div>
   </div>
 </div>
+
+<div class="editDelete">
+  <br>
+  <form method="post" action="/profile/delete">
+    <button class="button" type="submit" onclick="reveal" name="profileId" value="{{currentUser}}">I
+      I can't take the judgment! (delete my account)</button><br>
+  </form>
 </div>
 
 <script>
+
+
   const loadFile = function (event) {
     const image = document.getElementById('output');
     image.src = URL.createObjectURL(event.target.files[0]);
@@ -75,5 +89,15 @@
       x.style.display = "none";
     }
   }
+
+  const save = document.getElementById("save")
+  const img = document.getElementById("propic")
+
+  console.log("img.src", img.src)
+  if (img.src.length > 50) {
+    const questions = document.getElementById("questions")
+    questions.style.display = "block";
+  }
+
 
 </script>

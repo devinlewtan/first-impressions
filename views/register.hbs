@@ -1,28 +1,29 @@
-{{error}}
 <head>
   <title> Login </title>
   <link rel="stylesheet" href="css/forms.css">
 </head>
 <div class="formContainer">
-<div class="form">
-<form method="post" action="/register">
-  <div class="title">
-    <h1>sign up</h1>
-  </div>
-  <div class="field">
-    <label>username:</label>
-    <input type="text" name="username" />
-    <br />
-  </div>
-  <div class="field">
-    <label>password:</label>
-    <input type="password" name="password" required />
-  </div>
-  <div class="field">
-    <input class="button" type="submit" value="Submit" required />
-  </div>
-</form>
 
-<a href="/login">Already registered?</a>
-</div>
+  <div class="form">
+    <form method="post" action="/register">
+      {{error}}
+      <div class="title">
+        <h1>sign up</h1>
+      </div>
+      <div class="field">
+        <label>username:</label>
+        <input type="text" name="username" />
+        <br />
+      </div>
+      <div class="field">
+        <label>password:</label>
+        <input type="password" name="password" required />
+      </div>
+      <div class="field">
+        <input class="button" type="submit" value="Submit" required />
+      </div>
+    </form>
+
+    <a href="/login">Already registered?</a>
+  </div>
 </div>

@@ -43,3 +43,7 @@ label {
 .game {
   text-align: -webkit-center;
 }
+
+.hidden {
+  display: none;
+}
