@@ -28,14 +28,13 @@
     </div>
 
     <br>
-    {{#each question}}
     <div class="singleQuestion center">
-        <img src="data:image/png;base64, {{../image}}" width="300" />
-        <h2>{{this.question}}</h2>
+        <img src="data:image/png;base64, {{image}}" width="300" />
+        <h2>{{question.question}}</h2>
         <form method="post" class="game" action="/">
-            <input type="hidden" name="question_id" id={{this._id}} value="{{this._id}}">
+            <input type="hidden" name="question_id" id={{question._id}} value="{{question._id}}">
             <div class="manyAnswers center">
-                {{#each this.answers}}
+                {{#each question.answers}}
                 <div>
                     <button class="singleAnswer" type="submit" id={{this.value}} onclick="reveal" name="userGuess"
                         value="{{this.letter}}">{{this.value}}</button><br>
@@ -48,7 +47,6 @@
         <div id="disp" style="color:green; font-size:18px; font-weight:bold;">
         </div>
     </div>
-    {{/each}}
 
 </body>
 

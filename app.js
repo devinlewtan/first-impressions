@@ -117,7 +117,7 @@ app.get("/", (req, res) => {
             //render profile picture and random question
             console.log(prof.image);
             res.render("play", {
-              question: q,
+              question: q[0],
               image: prof.image.data,
             });
           }
@@ -143,15 +143,13 @@ app.post("/", (req, res) => {
       res.render("play", { error: err.message });
     } else {
       //TODO
-      let correct = userGuess == JSON.parse(JSON.stringify(q))[0].correctAnswer;
-      console.log(JSON.parse(JSON.stringify(q))[0].correctAnswer);
       let totalVotes = 0;
       //pass in total votes for question by accumulating guesses
       q = JSON.parse(JSON.stringify(q));
       q[0].answers.map((a) => (totalVotes += a.timesVoted));
       res.render("playResult", {
-        question: q,
-        correct: correct,
+        question: q[0],
+        userGuess: userGuess,
         totalVotes: totalVotes,
       });
     }

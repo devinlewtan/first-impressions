@@ -2,31 +2,34 @@
     <link rel="stylesheet" href="/css/questions.css">
 </head>
 <br>
-{{#each question}}
 
 <div class="singleQuestion" onload="handleVote()">
-    <img src="{{../image}}" height="180" width="250"><br>
-    <h2>{{this.question}}</h2>
-    {{#each this.answers}}
-    {{#if ../../correct}}
-    <h3><strong style="color: green">{{this.value}}</strong> - guessed {{this.timesVoted}} / {{../../totalVotes}}
+    <img src="{{image}}" height="180" width="250"><br>
+    <h2>{{question.question}}</h2>
+    {{#each question.answers}}
+    <h3><strong style="color: black" label="{{this.letter}}">{{this.value}}</strong> - guessed {{this.timesVoted}} /
+        {{../totalVotes}}
         times
     </h3>
-    {{else}}
-    <h3><strong style="color: red">{{this.value}}</strong> - guessed {{this.timesVoted}} / {{../../totalVotes}}
-        times
-    </h3>
-    {{/if}}
     {{/each}}
     <a class="button" href="/">next question</a>
-
 </div>
-{{/each}}
 </div>
 
 <script>
-    const total = 0
-    const handleVote = function () {
-        console.log("hi")
-    }
+    const correctAnswer = "{{ question.correctAnswer }}"
+    console.log("correctAnswer", correctAnswer)
+    const userGuess = "{{ userGuess }}"
+
+    const strong = document.querySelectorAll("strong")
+    strong.forEach((s) => {
+        if (s.getAttribute("label") === correctAnswer) {
+            s.setAttribute("style", "color: green")
+        }
+        else if (s.getAttribute("label") === userGuess) {
+            s.setAttribute("style", "color: red")
+        }
+
+    })
+
 </script>
