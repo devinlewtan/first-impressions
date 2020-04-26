@@ -104,6 +104,8 @@ app.get("/", (req, res) => {
       if (err) {
         console.log(err);
         res.send(err.message);
+      } else if (profiles.length === 0) {
+        res.redirect("/register");
       } else {
         let prof = profiles[random(profiles.length)];
         let ques = Array.from(prof.question_ids)[
@@ -115,7 +117,6 @@ app.get("/", (req, res) => {
             res.render("play", { error: err.message });
           } else {
             //render profile picture and random question
-            console.log(prof.image);
             res.render("play", {
               question: q[0],
               image: prof.image.data,
@@ -142,15 +143,20 @@ app.post("/", (req, res) => {
       console.log(err);
       res.render("play", { error: err.message });
     } else {
-      //TODO
-      let totalVotes = 0;
-      //pass in total votes for question by accumulating guesses
-      q = JSON.parse(JSON.stringify(q));
-      q[0].answers.map((a) => (totalVotes += a.timesVoted));
-      res.render("playResult", {
-        question: q[0],
-        userGuess: userGuess,
-        totalVotes: totalVotes,
+      Profile.find({ user_id: q[0].profile_id }, (err, p) => {
+        if (err) {
+          console.group(err.message);
+        }
+        let totalVotes = 0;
+        //pass in total votes for question by accumulating guesses
+        q = JSON.parse(JSON.stringify(q));
+        q[0].answers.map((a) => (totalVotes += a.timesVoted));
+        res.render("playResult", {
+          question: q[0],
+          image: p[0].image.data,
+          userGuess: userGuess,
+          totalVotes: totalVotes,
+        });
       });
     }
   });
@@ -168,12 +174,9 @@ app.post("/register", (req, res, next) => {
     req.body.password,
     function (err, user) {
       if (err) {
-        console.log(err);
-        //res.render("register");
         return res.render("register", { error: err.message });
       } else {
         passport.authenticate("local")(req, res, function () {
-          console.log("success");
           return res.redirect("/profile");
         });
       }
@@ -245,8 +248,8 @@ app.get("/profile", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
         defaultProf.save((err, savedProf) => {
           if (err) {
             console.log(err);
-            res.render("profile", { error: err.message });
           }
+          res.render("profile");
         });
       } else {
         //find questions by their ids
@@ -270,7 +273,6 @@ app.get("/profile", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
               }
             );
             const profileImage = profile[0].image.data;
-            console.log(profileImage);
             res.render("profile", {
               image: profileImage,
               questions: questions,
@@ -357,7 +359,6 @@ const upload = multer({
   dest: "./public/images/",
 });
 app.post("/uploadpicture", upload.single("picture"), (req, res) => {
-  console.log("req file", req.file);
   if (!req.file) {
     // If Submit was accidentally clicked with no file selected...
     res.render("profile", { error: "Please select a picture file to submit!" });

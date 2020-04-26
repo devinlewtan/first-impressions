@@ -5,20 +5,27 @@
 {{error}}
 {{success}}
 <div class="singleQuestion container">
+  <h1>my profile</h1>
   <h2>Welcome, stranger!</h2>
 
-  <p>To get started, upload an image of yourself. The less context, the better.</p>
+  <div id="beforePhoto">
+    <p>To get started, upload an image of yourself. The less context, the better.</p>
 
-  <form action="/uploadpicture" method="POST" enctype="multipart/form-data">
-    <input type="file" name="picture" accept="application/x-zip-compressed,image/*" onchange="loadFile(event)">
-    <br>
-    <p><img id="output" width="200" /></p>
-    <!-- here! -->
-    <input class="button" type="submit" value="Save image">
-  </form>
+    <form action="/uploadpicture" method="POST" enctype="multipart/form-data">
+      <input type="file" name="picture" accept="application/x-zip-compressed,image/*" onchange="loadFile(event)">
+      <br>
+      <p><img id="output" width="200" /></p>
+      <!-- here! -->
+      <input class="button" type="submit" value="Save image">
+    </form>
+  </div>
 
-  <p><img src="../public/images/icon.png" id="save" width="200" /></p>
-  <img src="data:image/png;base64, {{image}}" width="200" id="propic" />
+  <div id="afterPhoto" style="display: none;">
+    <img src="data:image/png;base64, {{image}}" width="400" id="propic" />
+    <h2>Nice face!</h2>
+
+  </div>
+
 
   <div id="questions" style="display: none">
 
@@ -43,8 +50,8 @@
     <br>
 
 
-    <h1> my questions </h1>
-    <a> Let's see what people think you are like... are you nervous?</a>
+    <h1> questions </h1>
+    <h2> Let's see what people think you are like... are you nervous?</h2>
     <div class="manyQuestions">
       {{#each questions}}
       <div class="singleQuestion">
@@ -69,7 +76,7 @@
 <div class="editDelete">
   <br>
   <form method="post" action="/profile/delete">
-    <button class="button" type="submit" onclick="reveal" name="profileId" value="{{currentUser}}">I
+    <button class="deleteProfile" type="submit" name="profileId" value="{{currentUser}}">
       I can't take the judgment! (delete my account)</button><br>
   </form>
 </div>
@@ -93,11 +100,18 @@
   const save = document.getElementById("save")
   const img = document.getElementById("propic")
 
-  console.log("img.src", img.src)
+
   if (img.src.length > 50) {
+    const beforePhoto = document.getElementById("beforePhoto")
+    const afterPhoto = document.getElementById("afterPhoto")
     const questions = document.getElementById("questions")
     questions.style.display = "block";
+    afterPhoto.style.display = "block";
+    beforePhoto.style.display = "none";
+
   }
+
+
 
 
 </script>
