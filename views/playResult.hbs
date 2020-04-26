@@ -7,11 +7,11 @@
     <img src="data:image/png;base64, {{image}}" width="400" />
     <h2>{{question.question}}</h2>
     {{#each question.answers}}
-    <h3 label="{{this.timesVoted}}"><strong style="color: black" label="{{this.letter}}">{{this.timesVoted}} /
-            {{../totalVotes}} % guessed {{this.value}}</strong>
+    <h3 label="{{this.letter}}" value="{{this.timesVoted}}"><strong style="color: black" label="{{this.letter}}"><span
+                id="{{this.letter}}"></span>% of people guessed
+            {{this.value}}</strong>
     </h3>
-    {{/each}}
-    <a class="button" href="/">next question</a>
+    {{/each}} <a class="button" href="/">next question</a>
 </div>
 </div>
 
@@ -33,10 +33,8 @@
     const totalVotes = " {{totalVotes}} "
     const answers = document.querySelectorAll("h3")
     let percentage = 0
-    const test = new Array()
     answers.forEach((a) => {
-        percentage = Math.floor(a.getAttribute("label") / parseInt(totalVotes) * 100)
-        test[a.getAttribute("label")] = percentage
+        percentage = Math.floor(a.getAttribute("value") / parseInt(totalVotes) * 100)
+        document.querySelector("span#" + a.getAttribute("label")).textContent = percentage;
     })
-
 </script>

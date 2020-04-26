@@ -341,7 +341,24 @@ app.post(
 
 app.post("/profile/delete", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
   console.log(req.user.username);
-  User.deleteOne({ profileId: req.user.username }, (err, deletedUser) => {
+  Question.deleteMany(
+    { profile_id: req.user.username },
+    (err, deletedQuestions) => {
+      if (err) {
+        return res.render("/profile", { error: err.message });
+      } else {
+        console.log(deletedQuestions.deletedCount, "questions deleted");
+      }
+    }
+  );
+  Profile.deleteOne({ user_id: req.user.username }, (err, deletedProfile) => {
+    if (err) {
+      return res.render("/profile", { error: err.message });
+    } else {
+      console.log(deletedProfile.deletedCount, "profiles deleted");
+    }
+  });
+  User.deleteOne({ username: req.user.username }, (err, deletedUser) => {
     if (err) {
       return res.render("/profile", { error: err.message });
     } else {

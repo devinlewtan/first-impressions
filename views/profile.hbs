@@ -57,7 +57,9 @@
       <div class="singleQuestion">
         <h2>{{this.question}}</h2>
         {{#each this.answers}}
-        <h3><strong>{{this.value}}</strong> - guessed {{this.timesVoted}} times </h3>
+        <h3 label="{{this.letter}}" value="{{this.timesVoted}}"><span id="{{this.letter}}">0</span>% of people guessed
+          <strong style="color: #4bc4a1; text-decoration: underline">{{this.value}}</strong>
+        </h3>
         {{/each}}
         <div class="editDelete">
           <br>
@@ -108,8 +110,19 @@
     questions.style.display = "block";
     afterPhoto.style.display = "block";
     beforePhoto.style.display = "none";
-
   }
+
+
+
+  let totalVotes = 0
+  const answers = document.querySelectorAll("h3")
+  answers.forEach(a => totalVotes += a.getAttribute("value"))
+  console.log(total)
+  let percentage = 0
+  answers.forEach((a) => {
+    percentage = Math.floor(a.getAttribute("value") / parseInt(totalVotes) * 100)
+    document.querySelector("span#" + a.getAttribute("label")).textContent = percentage;
+  })
 
 
 
