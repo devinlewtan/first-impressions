@@ -11,5 +11,6 @@
 }
 
 .formContainer {
-  padding-left: 29%;
+  text-align: -webkit-center;
+  padding: 50px;
 }

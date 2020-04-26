@@ -4,7 +4,7 @@
 <br>
 
 <div class="singleQuestion" onload="handleVote()">
-    <img src="data:image/png;base64, {{image}}" width="400" />
+    <img src="data:image/png;base64, {{image}}" width="250" />
     <h2>{{question.question}}</h2>
     {{#each question.answers}}
     <h3 label="{{this.letter}}" value="{{this.timesVoted}}"><strong style="color: black" label="{{this.letter}}"><span

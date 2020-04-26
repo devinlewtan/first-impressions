@@ -108,6 +108,11 @@ app.get("/", (req, res) => {
         res.redirect("/register");
       } else {
         let prof = profiles[random(profiles.length)];
+        // if (req.user) {
+        //   if (prof.user_id === req.user.username) {
+        //     prof = profiles[random(profiles.length)];
+        //   }
+        // }
         let ques = Array.from(prof.question_ids)[
           random(prof.question_ids.length)
         ];
