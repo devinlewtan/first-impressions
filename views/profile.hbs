@@ -12,11 +12,14 @@
     <p>To get started, upload an image of yourself. The less context, the better.</p>
 
     <form action="/uploadpicture" method="POST" enctype="multipart/form-data">
-      <input type="file" name="picture" accept="application/x-zip-compressed,image/*" onchange="loadFile(event)">
+      <input id="file" type="file" name="picture" accept="application/x-zip-compressed,image/*"
+        onchange="fileValidation(event)">
       <br>
-      <p><img id="output" width="400" /></p>
+      <p><img id="output" width="350" /></p>
       <!-- here! -->
-      <input class="button" type="submit" value="Save image">
+      <div id="afterValidation" style="display: none;">
+        <input class="button" type="submit" value="Save image">
+      </div>
     </form>
   </div>
 
@@ -86,10 +89,7 @@
 
 <script>
 
-  const loadFile = function (event) {
-    const image = document.getElementById('output');
-    image.src = URL.createObjectURL(event.target.files[0]);
-  };
+
   const showHide = function () {
     var x = document.getElementById("myDIV");
     if (x.style.display === "none") {
@@ -112,4 +112,22 @@
     beforePhoto.style.display = "none";
   }
 
+  fileValidation = (event) => {
+    const fi = document.getElementById('file');
+    if (fi.files.length > 0) {
+      for (const i = 0; i <= fi.files.length - 1; i++) {
+        const fsize = fi.files.item(i).size;
+        const file = Math.round((fsize / 1024));
+        if (file >= 4096) {
+          alert(
+            "File too Big, please select a file less than 4mb");
+        } else {
+          const image = document.getElementById('output');
+          image.src = URL.createObjectURL(event.target.files[0]);
+          const saveButton = document.getElementById("afterValidation")
+          saveButton.style = "display: block"
+        }
+      }
+    }
+  }
 </script>
