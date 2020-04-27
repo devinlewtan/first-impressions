@@ -98,15 +98,13 @@ An Example Question:
 
 * (5 points) Integrate user authentication
   * I'm going to be using passport for user authentication
-  * I'm going to include GoogleOauth as well as Twitter (using passport)
+  * I'm going to include GoogleOauth (using passport)
   * I want login to be as frictionless as possible to encourage more users to create profiles 
-* (2 points) Implement quiz functionality / html
-  * see <code>https://github.com/jamesqquick/Build-A-Quiz-App-With-HTML-CSS-and-JavaScript</code>
-  * I've never had to build something that has multiple answers with right/wrong statuses. It should be a good challenge for this assignment!
-* (3 points) User uploaded images
-  * accept user uploaded images. requires saving images to database in Buffer format at rendering. This has proven to be quite difficult so far... definitely consider it part of my research!
+* (3 points) Perform client side form validation using custom JavaScript
+* (3 points) Use a server-side JavaScript module for user uploaded images (Multer)
+  * accept user uploaded images using multer middleware. requires saving images to database in 64bit ecncoding before passing to front end. 
 
-10 points total out of 8 required points 
+11 points total out of 8 required points 
 
 ## [Link to Initial Main Project File](https://github.com/nyu-csci-ua-0480-008-spring-2020/devinlewtan-final-project/blob/d7a93d52d3a7f440ab183288925033ad5d89984d/app.js#L1)
 
