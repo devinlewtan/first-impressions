@@ -43,7 +43,8 @@ passport.deserializeUser(User.deserializeUser());
 
 // const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 // (auth = require("./auth")),
-//   (cookieParser = require("cookie-parser")),
+const cookieParser = require("cookie-parser");
+
 //   (cookieSession = require("cookie-session"));
 
 // app.use(
@@ -52,7 +53,7 @@ passport.deserializeUser(User.deserializeUser());
 //     keys: ["123"],
 //   })
 // );
-// app.use(cookieParser());
+app.use(cookieParser());
 
 // passport.use(new GoogleStrategy({
 //   clientID: %your_client_ID%,
@@ -93,26 +94,33 @@ app.use(function (req, res, next) {
 //ROUTES
 //should render random question from database (and the image of the associated user profile)
 app.get("/", (req, res) => {
+  let cookies = req.cookies;
+
+  let questionAnswered = [];
+  if (!!cookies["questionAnswered"]) {
+    questionAnswered = JSON.parse(cookies["questionAnswered"]);
+  }
   //generate random index
   const random = function (max) {
     return Math.floor(Math.random() * Math.floor(max));
   };
   //grab random question from random profile
   Profile.find(
-    { question_ids: { $exists: true, $not: { $size: 0 } } },
+    {
+      question_ids: {
+        $exists: true,
+        $not: { $size: 0 },
+        $nin: questionAnswered,
+      },
+    },
     function (err, profiles) {
       if (err) {
         console.log(err);
         res.send(err.message);
       } else if (profiles.length === 0) {
-        res.redirect("/register");
+        res.render("noMore");
       } else {
         let prof = profiles[random(profiles.length)];
-        // if (req.user) {
-        //   if (prof.user_id === req.user.username) {
-        //     prof = profiles[random(profiles.length)];
-        //   }
-        // }
         let ques = Array.from(prof.question_ids)[
           random(prof.question_ids.length)
         ];
@@ -156,6 +164,14 @@ app.post("/", (req, res) => {
         //pass in total votes for question by accumulating guesses
         q = JSON.parse(JSON.stringify(q));
         q[0].answers.map((a) => (totalVotes += a.timesVoted));
+        let cookie = req.cookies;
+        let questionAnswered = [];
+        if (!!cookie["questionAnswered"]) {
+          questionAnswered = JSON.parse(cookie["questionAnswered"]);
+        }
+        questionAnswered.push(question_id);
+        res.cookie("questionAnswered", JSON.stringify(questionAnswered));
+
         res.render("playResult", {
           question: q[0],
           image: p[0].image.data,
