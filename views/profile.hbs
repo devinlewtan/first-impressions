@@ -45,8 +45,8 @@
         c) <input type="text" name="c" required></br>
         d) <input type="text" name="d" required></br>
         </br>
-        correct answer (just the letter!): <input type="text" onsubmit="validateCorrectLetter(event)" size="2"
-          name="correctAnswer" required></br>
+        correct answer (just the letter!): <input id="correctLetter" type="text" onsubmit="validateCorrectLetter(event)"
+          size="2" name="correctAnswer" required pattern="a|b|c|d"></br>
         </br>
         <input class="button" type="submit" value="Save">
       </form>
@@ -89,9 +89,15 @@
 </div>
 
 <script>
-  const validateCorrectLetter = function (event) {
-    console.log(event)
-  }
+  const correctLetter = document.getElementById("correctLetter");
+
+  correctLetter.addEventListener("input", function (event) {
+    if (correctLetter.validity.patternMismatch) {
+      correctLetter.setCustomValidity("please put a valid letter!");
+    } else {
+      correctLetter.setCustomValidity("");
+    }
+  });
 
   const showHide = function () {
     var x = document.getElementById("myDIV");
