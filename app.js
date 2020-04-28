@@ -353,7 +353,6 @@ app.post(
       { question_ids: { $elemMatch: { question_id } } },
       (err, prof) => {
         if (err) console.log(err.message);
-        console.log(prof, "updated");
         res.redirect("/profile");
       }
     );
@@ -361,7 +360,6 @@ app.post(
 );
 
 app.post("/profile/delete", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
-  console.log(req.user.username);
   Question.deleteMany(
     { profile_id: req.user.username },
     (err, deletedQuestions) => {

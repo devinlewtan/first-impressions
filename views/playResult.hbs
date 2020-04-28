@@ -8,7 +8,7 @@
     <h2>{{question.question}}</h2>
     {{#each question.answers}}
     <h3 label="{{this.letter}}" value="{{this.timesVoted}}"><strong style="color: black" label="{{this.letter}}"><span
-                id="{{this.letter}}"></span>% of people guessed
+                id="{{this.letter}}">0</span>% of people guessed
             {{this.value}}</strong>
     </h3>
     {{/each}} <a class="button" href="/">next question</a>

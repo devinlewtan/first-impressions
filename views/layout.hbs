@@ -7,21 +7,20 @@
 	<title>First Impressions</title>
 </head>
 
-<body>
-	<div class="loginreg" id="loginreg">
-		{{#if currentUser}}
-		<a href="/profile">My Profile</a> | <a href="/logout">Logout</a>
-		<p style="text-align: left"> Hi, <strong>{{currentUser.username}}</strong>!</p>
-		{{else}}
-		<a href="/login">Login</a> | <a href="/register">Sign up</a>
-		{{/if}}
-	</div>
-	<div class="center">
-		<h1 id="head"><a href="/" id="head">first impressions</a>
-			<h1>
-				<h2>welcome to a project that lets strangers judge you by your cover for fun.</h2>
-				<div class="container" {{{body}}} </div>
-				</div>
-</body>
+<div class="loginreg" id="loginreg">
+	{{#if currentUser}}
+	<a href="/profile">My Profile</a> | <a href="/logout">Logout</a>
+	<p style="text-align: left"> Hi, <strong>{{currentUser.username}}</strong>!</p>
+	{{else}}
+	<a href="/login">Login</a> | <a href="/register">Sign up</a>
+	{{/if}}
+</div>
+<div class="center">
+	<h1 id="head"><a href="/" id="head">first impressions</a>
+		<h1>
+			<h2>welcome to a project that lets strangers judge you by your cover for fun.</h2>
+			<div class="container" {{{body}}} </div>
+			</div>
+			</body>
 
-</html>
+			</html>

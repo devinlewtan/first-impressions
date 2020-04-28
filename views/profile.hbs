@@ -45,7 +45,8 @@
         c) <input type="text" name="c" required></br>
         d) <input type="text" name="d" required></br>
         </br>
-        correct answer (just the letter!): <input type="text" size="2" name="correctAnswer" required></br>
+        correct answer (just the letter!): <input type="text" onsubmit="validateCorrectLetter(event)" size="2"
+          name="correctAnswer" required></br>
         </br>
         <input class="button" type="submit" value="Save">
       </form>
@@ -88,7 +89,9 @@
 </div>
 
 <script>
-
+  const validateCorrectLetter = function (event) {
+    console.log(event)
+  }
 
   const showHide = function () {
     var x = document.getElementById("myDIV");
