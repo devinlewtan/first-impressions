@@ -3,8 +3,9 @@ const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 const fs = require("fs");
-const db = require("./db.js");
 const bodyParser = require("body-parser");
+const db = require("./db.js");
+const a = require("./Answer.js");
 
 const app = express();
 app.set("view engine", "hbs");
@@ -310,10 +311,10 @@ app.post("/profile", (req, res) => {
     profile_id: req.user.username,
     question: req.body.question,
     answers: [
-      { letter: "a", value: req.body.a, timesVoted: 0 },
-      { letter: "b", value: req.body.b, timesVoted: 0 },
-      { letter: "c", value: req.body.c, timesVoted: 0 },
-      { letter: "d", value: req.body.d, timesVoted: 0 },
+      new a.Answer("a", req.body.a, 0),
+      new a.Answer("b", req.body.b, 0),
+      new a.Answer("c", req.body.c, 0),
+      new a.Answer("d", req.body.d, 0),
     ],
     correctAnswer: req.body.correctAnswer,
   });
