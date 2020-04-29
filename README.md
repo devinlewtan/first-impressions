@@ -96,15 +96,13 @@ An Example Question:
 
 ## Research Topics
 
-* (5 points) Integrate user authentication
-  * I'm going to be using passport for user authentication
-  * I'm going to include GoogleOauth (using passport)
-  * I want login to be as frictionless as possible to encourage more users to create profiles 
+* (4 points) Integrate user authentication
+  * I'm going to be using passportJS for user authentication
 * (3 points) Perform client side form validation using custom JavaScript
 * (3 points) Use a server-side JavaScript module for user uploaded images (Multer)
   * accept user uploaded images using multer middleware. requires saving images to database in 64bit ecncoding before passing to front end. 
 
-11 points total out of 8 required points 
+10 points total out of 8 required points 
 
 ## [Link to Initial Main Project File](https://github.com/nyu-csci-ua-0480-008-spring-2020/devinlewtan-final-project/blob/d7a93d52d3a7f440ab183288925033ad5d89984d/app.js#L1)
 
