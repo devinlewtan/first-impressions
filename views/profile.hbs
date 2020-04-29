@@ -124,16 +124,16 @@
   fileValidation = (event) => {
     const fi = document.getElementById('file');
     if (fi.files.length > 0) {
-      for (const i = 0; i <= fi.files.length - 1; i++) {
-        const fsize = fi.files.item(i).size;
-        const file = Math.round((fsize / 1024));
-        if (file >= 4096) {
+      for (let i = 0; i <= fi.files.length - 1; i++) {
+        let fsize = fi.files.item(i).size;
+        let file = Math.round((fsize / 1024));
+        if (file >= 1024) {
           alert(
             "File too Big, please select a file less than 4mb");
         } else {
-          const image = document.getElementById('output');
+          let image = document.getElementById('output');
           image.src = URL.createObjectURL(event.target.files[0]);
-          const saveButton = document.getElementById("afterValidation")
+          let saveButton = document.getElementById("afterValidation")
           saveButton.style = "display: block"
         }
       }
