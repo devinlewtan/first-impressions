@@ -11,7 +11,7 @@
 }
 
 .manyQuestions {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   margin: 15px;
   display: grid;
   align-items: center;
@@ -27,6 +27,7 @@
   width: 100%;
   max-inline-size: -webkit-fill-available;
   font-size: x-large;
+  justify-self: center;
 }
 
 .manyAnswers {

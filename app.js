@@ -384,7 +384,7 @@ app.post("/profile/delete", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
     } else {
       console.log(deletedUser.deletedCount, "accounts deleted");
       req.logout();
-      return res.redirect("/");
+      return res.render("bye");
     }
   });
 });

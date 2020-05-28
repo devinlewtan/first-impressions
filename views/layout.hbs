@@ -15,12 +15,18 @@
 	<a href="/login">Login</a> | <a href="/register">Sign up</a>
 	{{/if}}
 </div>
-<div class="center">
-	<h1 id="head"><a href="/" id="head">first impressions</a>
-		<h1>
-			<h2>welcome to a project that lets strangers judge you by your cover for fun.</h2>
-			<div class="container" {{{body}}} </div>
-			</div>
-			</body>
+<h1 id="head"><a href="/" id="head">first impressions</a>
+	<h1>
+		<h2>welcome to a project that lets strangers judge you by your cover for fun.</h2>
+		<div class="container" {{{body}}} </div>
+		</div>
+		</body>
+		<footer>
+			{{#if currentUser}}
+			{{else}}
+			<small>Want to see what people think of you? <a href="/register">Create a
+					profile!</a></small>
+			{{/if}}
+		</footer>
 
-			</html>
+		</html>

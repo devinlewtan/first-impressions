@@ -1,5 +1,6 @@
 <head>
   <link rel="stylesheet" href="/css/questions.css">
+  <link rel="stylesheet" href="/css/modal.css">
 </head>
 <br />
 {{error}}
@@ -10,7 +11,6 @@
 
   <div id="beforePhoto">
     <p>To get started, upload an image of yourself. The less context, the better.</p>
-
     <form action="/uploadpicture" method="POST" enctype="multipart/form-data">
       <input id="file" type="file" name="picture" accept="application/x-zip-compressed,image/*"
         onchange="fileValidation(event)">
@@ -18,13 +18,32 @@
       <p><img id="output" width="350" /></p>
       <!-- here! -->
       <div id="afterValidation" style="display: none;">
-        <input class="button" type="submit" value="Save image">
+        <input class="button" type="submit" value="save image">
       </div>
     </form>
   </div>
 
   <div id="afterPhoto" style="display: none;">
     <img src="data:image/png;base64, {{image}}" width="250" id="propic" />
+    <br>
+    {{!-- EDIT MODAL --}}
+    <button id="edit" class="button" type="button">edit</button>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <h2>choose a new profile image</h2>
+        <form action="/uploadpicture" method="POST" enctype="multipart/form-data">
+          <input id="file" type="file" name="picture" accept="application/x-zip-compressed,image/*"
+            onchange="fileValidation(event)">
+          <br>
+          <p><img id="output" width="350" /></p>
+          <!-- here! -->
+          <div id="afterValidation" style="display: none;">
+            <input class="button" type="submit" value="save image">
+            <a class="button" onchange="hideModal()" href="/profile">cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
     <h2>Nice face!</h2>
 
   </div>
@@ -34,7 +53,7 @@
 
     <p> Next, add up to 10 questions about yourself! Get creative with your answers.</p>
 
-    <button class="button" type="button" onclick="showHide()">Add question +</button>
+    <button class="button" type="button" onclick="showHide()">add question +</button>
     </br></br>
     <div id="myDIV" style="display: none">
       <form method="post" action="/profile">
@@ -89,6 +108,15 @@
 </div>
 
 <script>
+  var modal = document.getElementById("myModal");
+  var button = document.getElementById("edit");
+  button.onclick = function () {
+    modal.style.display = "block";
+  }
+  hideModal = function () {
+    modal.style.display = "hidden";
+  }
+
   const correctLetter = document.getElementById("correctLetter");
 
   correctLetter.addEventListener("input", function (event) {
@@ -129,12 +157,12 @@
         let file = Math.round((fsize / 1024));
         if (file >= 1024) {
           alert(
-            "File too Big, please select a file less than 4mb");
+            "File too Big, please select a file less than 1mb");
         } else {
           let image = document.getElementById('output');
           image.src = URL.createObjectURL(event.target.files[0]);
           let saveButton = document.getElementById("afterValidation")
-          saveButton.style = "display: block"
+          saveButton.style = "display: block;"
         }
       }
     }

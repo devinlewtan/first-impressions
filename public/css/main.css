@@ -86,7 +86,9 @@ a:visited {
   text-align: right;
   display: inline-block;
   right: 1%;
-  position: fixed;
+  padding-right: 1%;
+  left: 45%;
+  position: relative;
   top: 1%;
 }
 
