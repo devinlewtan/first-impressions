@@ -6,7 +6,7 @@
 {{error}}
 {{success}}
 <div class="singleQuestion container">
-  <h1>my profile</h1>
+  <h1>🤡 my profile 🥺</h1>
   <h2>Welcome, stranger!</h2>
 
   <div id="beforePhoto">
@@ -32,15 +32,17 @@
       <div class="modal-content">
         <h2>choose a new profile image</h2>
         <form action="/uploadpicture" method="POST" enctype="multipart/form-data">
-          <input id="file" type="file" name="picture" accept="application/x-zip-compressed,image/*"
-            onchange="fileValidation(event)">
+          <input id="fileEdit" type="file" name="picture" accept="application/x-zip-compressed,image/*"
+            onchange="fileValidationEdit(event)">
           <br>
-          <p><img id="output" width="350" /></p>
+          <p><img id="outputEdit" width="350" /></p>
           <!-- here! -->
-          <div id="afterValidation" style="display: none;">
+          <div id="afterValidationEdit" style="display: none;">
             <input class="button" type="submit" value="save image">
-            <a class="button" onchange="hideModal()" href="/profile">cancel</a>
           </div>
+          <br>
+          <a class="button" onchange="hideModal()" href="/profile">cancel</a>
+
         </form>
       </div>
     </div>
@@ -73,7 +75,7 @@
     <br>
 
 
-    <h1> questions </h1>
+    <h1>🤔 questions 🧐</h1>
     <h2> Let's see what people think you are like... are you nervous?</h2>
     <div class="manyQuestions">
       {{#each questions}}
@@ -89,7 +91,7 @@
           <br>
           <form method="post" action="/profile/questions/delete">
             <button class="button" type="submit" id={{this.value}} onclick="reveal" name="questionId"
-              value="{{this._id}}">delete</button><br>
+              value="{{this._id}}">delete 🗑️</button><br>
           </form>
         </div>
       </div>
@@ -162,6 +164,25 @@
           let image = document.getElementById('output');
           image.src = URL.createObjectURL(event.target.files[0]);
           let saveButton = document.getElementById("afterValidation")
+          saveButton.style = "display: block;"
+        }
+      }
+    }
+  }
+
+  fileValidationEdit = (event) => {
+    const fi = document.getElementById('fileEdit');
+    if (fi.files.length > 0) {
+      for (let i = 0; i <= fi.files.length - 1; i++) {
+        let fsize = fi.files.item(i).size;
+        let file = Math.round((fsize / 1024));
+        if (file >= 1024) {
+          alert(
+            "File too Big, please select a file less than 1mb");
+        } else {
+          let image = document.getElementById('outputEdit');
+          image.src = URL.createObjectURL(event.target.files[0]);
+          let saveButton = document.getElementById("afterValidationEdit")
           saveButton.style = "display: block;"
         }
       }

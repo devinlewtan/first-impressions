@@ -3,7 +3,8 @@
 }
 
 #head {
-  font-size: 35px;
+  position: relative;
+  font-size: 40px;
   text-align: center;
   color: black;
 }
@@ -38,12 +39,12 @@ img {
 }
 h1 {
   font: "Nunito Black 900";
-  font-size: 35px;
+  font-size: 30px;
   text-align: center;
 }
 
 h2 {
-  font-size: 25px;
+  font-size: 20px;
   text-align: center;
   color: #4bc4a1;
 }
@@ -82,14 +83,15 @@ a:visited {
 }
 
 .loginreg {
-  font-size: 15px;
+  font-size: 20px;
+  background-color: white;
+  border-radius: 30px;
   text-align: right;
   display: inline-block;
   right: 1%;
-  padding-right: 1%;
-  left: 45%;
-  position: relative;
-  top: 1%;
+  padding: 1%;
+  z-index: 1;
+  position: absolute;
 }
 
 body {
@@ -176,4 +178,36 @@ body {
   color: #888;
   text-decoration: underline;
   border-radius: 20px;
+}
+
+.shoutout {
+  /*Chrome,Safari*/
+  -webkit-clip-path: polygon(
+    455px 148px,
+    479px 91px,
+    443px 119px,
+    423px 26px,
+    377px 122px,
+    343px 49px,
+    321px 122px,
+    213px 64px,
+    269px 147px,
+    130px 143px,
+    281px 212px,
+    202px 245px,
+    307px 243px,
+    235px 332px,
+    409px 258px,
+    520px 357px,
+    529px 262px,
+    668px 284px,
+    589px 206px,
+    650px 185px,
+    520px 162px,
+    602px 57px,
+    452px 148px
+  );
+
+  /*Firefox*/
+  clip-path: url("#clipPolygon");
 }
