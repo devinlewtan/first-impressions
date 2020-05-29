@@ -209,17 +209,20 @@ app.post("/register", (req, res, next) => {
 app.get(
   "/auth/google",
   passport.authenticate("google", {
-    scope: ["https://www.googleapis.com/auth/userinfo.profile"],
+    scope: [
+      "https://www.googleapis.com/auth/plus.login",
+      ,
+      "https://www.googleapis.com/auth/plus.profile.emails.read",
+    ],
   })
 );
 
 app.get(
   "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  (req, res) => {
-    req.session.token = req.user.token;
-    res.redirect("/");
-  }
+  passport.authenticate("google", {
+    successRedirect: "/auth/google/success",
+    failureRedirect: "/auth/google/failure",
+  })
 );
 
 app.get("/login", (req, res) => {

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 <html lang="en">
 
 <head>
@@ -29,6 +30,7 @@
         </div>
         <label id="error-message"></label>
       </form>
+      <div class="g-signin2" data-onsuccess="onSignIn"></div>
       <a href="/register">need to sign up?</a>
     </body>
   </div>
@@ -44,4 +46,5 @@
     errorMessage.innerText = info;
     errorMessage.style.display = "block";
   }
+
 </script>
